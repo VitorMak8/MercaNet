@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head('Carrinho')}"></head>
+<body>
+<header th:replace="~{base :: topo}"></header>
+<main>
+  <h1>Seu carrinho</h1>
+  <div th:replace="~{base :: msg}"></div>
+  <p class="vazio" th:if="${itens.isEmpty()}">Seu carrinho está vazio. <a href="/">Ver produtos</a></p>
+  <div class="duas" th:unless="${itens.isEmpty()}">
+    <ul class="lista painel">
+      <li th:each="i : ${itens}">
+        <div class="foto peq"><img th:if="${i.p.imagem != null}" th:src="${i.p.imagem}" alt=""><span th:unless="${i.p.imagem != null}" th:text="${i.p.icone}"></span></div>
+        <span class="nome"><b th:text="${i.p.nome}"></b><small>R$ <span th:text="${#numbers.formatDecimal(i.p.preco,1,'POINT',2,'COMMA')}"></span> cada</small></span>
+        <div class="qtd">
+          <form th:action="@{/carrinho/menos/{id}(id=${i.p.id})}" method="post"><button class="mini" aria-label="Tirar uma unidade">−</button></form>
+          <b th:text="${i.qtd}"></b>
+          <form th:action="@{/carrinho/add/{id}(id=${i.p.id})}" method="post"><input type="hidden" name="voltar" value="/carrinho"><button class="mini" aria-label="Adicionar uma unidade">+</button></form>
+        </div>
+        <b class="sub">R$ <span th:text="${#numbers.formatDecimal(i.sub,1,'POINT',2,'COMMA')}"></span></b>
+        <form th:action="@{/carrinho/remover/{id}(id=${i.p.id})}" method="post"><button class="sec">Remover</button></form>
+      </li>
+    </ul>
+    <aside class="resumo painel">
+      <h2>Resumo</h2>
+      <p class="linha-r"><span>Total</span><b class="total">R$ <span th:text="${#numbers.formatDecimal(total,1,'POINT',2,'COMMA')}"></span></b></p>
+      <p class="linha-r cb"><span>Cashback desta compra</span><b>R$ <span th:text="${#numbers.formatDecimal(total * 0.02,1,'POINT',2,'COMMA')}"></span></b></p>
+      <form th:action="@{/finalizar}" method="post" class="form">
+        <label>Forma de pagamento
+          <select name="pagamento"><option>Pix</option><option>Cartão de crédito</option><option>Cartão de débito</option></select>
+        </label>
+        <button class="verde">Finalizar compra</button>
+      </form>
+    </aside>
+  </div>
+</main>
+<footer th:replace="~{base :: rodape}"></footer>
+</body>
+</html>

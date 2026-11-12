@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(titulo)">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title th:text="${titulo} + ' - MercaNet'">Loja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<header th:fragment="topo" class="topo">
+  <a href="/" class="logo"><i class="mark">M</i>Merca<span>Net</span></a>
+  <nav>
+    <a href="/">Loja</a>
+    <a href="/admin" th:if="${usuario != null and usuario.tipo == 'ADM'}">Painel</a>
+    <a href="/carrinho" class="cart">🛒 Carrinho <span class="badge" th:text="${qtd}">0</span></a>
+    <span class="user" th:if="${usuario != null}"><b th:text="${usuario.nome}"></b>
+      <small th:if="${usuario.tipo == 'CLIENTE'}" class="pill">R$ <span th:text="${#numbers.formatDecimal(usuario.pontos,1,'POINT',2,'COMMA')}"></span> cashback</small>
+      <a href="/sair">Sair</a></span>
+  </nav>
+</header>
+<div th:fragment="msg">
+  <p class="aviso ok" th:if="${ok}" th:text="${ok}"></p>
+  <p class="aviso erro" th:if="${erro}" th:text="${erro}"></p>
+</div>
+<footer th:fragment="rodape" class="rodape"><div><b>MercaNet</b><span>Mercado online com estoque em tempo real, Pix e cashback.</span></div>
+</body>
+</html>

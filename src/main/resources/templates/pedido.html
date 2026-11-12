@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head('Pedido')}"></head>
+<body>
+<header th:replace="~{base :: topo}"></header>
+<main class="estreito">
+  <h1>Pedido <span th:text="${ped['codigo']}"></span></h1>
+  <div th:replace="~{base :: msg}"></div>
+  <p><span class="pill" th:classappend="${ped['status'] == 'Pago'} ? 'verde'" th:text="${ped['status']}"></span>
+     Total: <b>R$ <span th:text="${#numbers.formatDecimal(ped['total'],1,'POINT',2,'COMMA')}"></span></b></p>
+  <section class="pix" th:if="${qr != null}">
+    <h2>Pague com Pix</h2>
+    <div class="qr" th:utext="${qr}"></div>
+    <p class="sub">Aponte a câmera do app do banco para o QR Code ou use o código abaixo.</p>
+    <textarea id="codigo" readonly rows="4" th:text="${ped['pix']}"></textarea>
+    <button class="sec" type="button" onclick="navigator.clipboard.writeText(document.getElementById('codigo').value);this.textContent='Copiado!'">Copiar código</button>
+    <form th:action="@{/pedido/{c}/pagar(c=${ped['codigo']})}" method="post"><button class="verde">Simular pagamento confirmado</button></form>
+    <p class="sub">Simulação: o QR Code é aleatório e não gera cobrança real.</p>
+  </section>
+  <p class="aviso ok" th:if="${qr == null}">Pagamento confirmado. Obrigado pela compra!</p>
+  <ul class="lista"><li th:each="i : ${ped['itens']}"><span class="nome"><b th:text="${i['nome']}"></b><small th:text="${i['qtd']} + ' un.'"></small></span></li></ul>
+  <a href="/">Continuar comprando</a>
+</main>
+<footer th:replace="~{base :: rodape}"></footer>
+</body>
+</html>

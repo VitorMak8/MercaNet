@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head('Entrar')}"></head>
+<body class="split-page">
+<aside class="lado">
+  <a href="/login" class="logo"><i class="mark">M</i>Merca<span>Net</span></a>
+  <h2>Compras do mercado, do jeito mais simples.</h2>
+  <p>Estoque em tempo real, Pix e cashback de 2%.</p>
+  <div class="hero-art" aria-hidden="true"><span>🥑</span><span>🍞</span><span>🥛</span><span>🍅</span></div>
+</aside>
+<main class="auth">
+  <h1>Bem-vindo de volta</h1>
+  <p class="sub">Entre para fazer suas compras ou acessar o painel da loja.</p>
+  <div th:replace="~{base :: msg}"></div>
+  <form th:action="@{/login}" method="post" class="form">
+      <label>E-mail <input type="email" name="email" required autofocus></label>
+      <label>Senha <input type="password" name="senha" required></label>
+      <button>Entrar</button>
+  </form>
+  <p class="sub">Ainda não tem conta? <a href="/cadastro">Cadastre-se</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head('Loja')}"></head>
+<body>
+<header th:replace="~{base :: topo}"></header>
+<main>
+  <section class="hero">
+    <div class="hero-txt">
+      <span class="pill verde">2% de cashback em toda compra</span>
+      <h1>Seu mercado, sem fila e sem sair de casa.</h1>
+      <p>Escolha, pague por Pix ou cartão e veja o estoque em tempo real.</p>
+      <form method="get" class="busca">
+        <input name="q" th:value="${q}" placeholder="O que você procura hoje?" aria-label="Buscar produto">
+        <button class="verde">Buscar</button>
+      </form>
+    </div>
+    <div class="hero-art" aria-hidden="true"><span>🥑</span><span>🍞</span><span>🥛</span><span>🍅</span></div>
+  </section>
+  <section class="beneficios">
+    <div><b>⚡ Estoque ao vivo</b><span>Só aparece o que está disponível.</span></div>
+    <div><b>💸 Pix ou cartão</b><span>Pague do jeito que preferir.</span></div>
+    <div><b>🎁 Cashback de 2%</b><span>Volta para você em toda compra.</span></div>
+  </section>
+  <div th:replace="~{base :: msg}"></div>
+  <nav class="cats">
+    <a href="/" th:classappend="${cat == null} ? 'on'">Todos</a>
+    <a th:each="c : ${cats}" th:href="@{/(cat=${c})}" th:text="${c}" th:classappend="${c == cat} ? 'on'"></a>
+  </nav>
+  <p class="vazio" th:if="${produtos.isEmpty()}">Nenhum produto encontrado. Tente outro nome.</p>
+  <section class="grid">
+    <article class="card" th:each="p : ${produtos}">
+      <div class="foto">
+        <img th:if="${p.imagem != null}" th:src="${p.imagem}" th:alt="${p.nome}">
+        <span th:unless="${p.imagem != null}" th:text="${p.icone}"></span>
+        <em class="tag" th:if="${p.estoque > 0 and p.estoque <= 5}">Últimas unidades</em>
+        <em class="tag off" th:if="${p.estoque == 0}">Esgotado</em>
+      </div>
+      <small th:text="${p.categoria}"></small>
+      <h3 th:text="${p.nome}"></h3>
+      <div class="preco">R$ <span th:text="${#numbers.formatDecimal(p.preco,1,'POINT',2,'COMMA')}"></span></div>
+      <span class="est" th:text="${p.estoque > 0 ? p.estoque + ' em estoque' : 'Indisponível'}"></span>
+      <form th:action="@{/carrinho/add/{id}(id=${p.id})}" method="post"><button th:disabled="${p.estoque == 0}">+ Adicionar</button></form>
+    </article>
+  </section>
+</main>
+<footer th:replace="~{base :: rodape}"></footer>
+</body>
+</html>

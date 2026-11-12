@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head('Painel')}"></head>
+<body>
+<header th:replace="~{base :: topo}"></header>
+<main>
+  <h1>Painel da loja</h1>
+  <div th:replace="~{base :: msg}"></div>
+  <div class="stats">
+    <div class="stat"><b th:text="${produtos.size()}"></b><span>Produtos</span></div>
+    <div class="stat"><b th:text="${produtos.?[estoque <= 5].size()}"></b><span>Com estoque baixo</span></div>
+    <div class="stat"><b th:text="${pedidos.size()}"></b><span>Pedidos recentes</span></div>
+  </div>
+  <h2>Novo produto</h2>
+  <form th:action="@{/admin/produto}" method="post" enctype="multipart/form-data" class="linha">
+    <input name="nome" placeholder="Nome" required>
+    <input name="categoria" placeholder="Categoria" required>
+    <input name="preco" type="number" step="0.01" min="0" placeholder="Preço" required>
+    <input name="estoque" type="number" min="0" placeholder="Estoque" required>
+    <input name="imagem" type="file" accept="image/*" aria-label="Foto do produto">
+    <button class="verde">Cadastrar</button>
+  </form>
+  <h2>Produtos</h2>
+  <div class="adm-item" th:each="p : ${produtos}">
+    <div class="foto peq"><img th:if="${p.imagem != null}" th:src="${p.imagem}" alt=""><span th:unless="${p.imagem != null}" th:text="${p.icone}"></span></div>
+    <form th:action="@{/admin/editar/{id}(id=${p.id})}" method="post" enctype="multipart/form-data" class="linha">
+      <input name="nome" th:value="${p.nome}" required aria-label="Nome">
+      <input name="categoria" th:value="${p.categoria}" required aria-label="Categoria">
+      <input name="preco" type="number" step="0.01" min="0" th:value="${p.preco}" required aria-label="Preço">
+      <input name="estoque" type="number" min="0" th:value="${p.estoque}" required aria-label="Estoque">
+      <input name="imagem" type="file" accept="image/*" aria-label="Nova foto">
+      <button class="verde">Salvar</button>
+      <button class="sec" th:formaction="@{/admin/excluir/{id}(id=${p.id})}" formnovalidate onclick="return confirm('Excluir este produto?')">Excluir</button>
+    </form>
+  </div>
+  <h2>Últimos pedidos</h2>
+  <p class="vazio" th:if="${pedidos.isEmpty()}">Nenhum pedido ainda.</p>
+  <ul class="lista painel">
+    <li th:each="o : ${pedidos}">
+      <b th:text="${o['codigo']}"></b>
+      <span class="nome"><span th:text="${o['cliente']}"></span><small th:text="${o['pagamento']}"></small></span>
+      <span class="pill" th:classappend="${o['status'] == 'Pago'} ? 'verde'" th:text="${o['status']}"></span>
+      <b>R$ <span th:text="${#numbers.formatDecimal(o['total'],1,'POINT',2,'COMMA')}"></span></b>
+    </li>
+  </ul>
+</main>
+<footer th:replace="~{base :: rodape}"></footer>
+</body>
+</html>

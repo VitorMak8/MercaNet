@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head('Cadastro')}"></head>
+<body class="split-page">
+<aside class="lado">
+  <a href="/login" class="logo"><i class="mark">M</i>Merca<span>Net</span></a>
+  <h2>Compras do mercado, do jeito mais simples.</h2>
+  <p>Estoque em tempo real, Pix e cashback de 2%.</p>
+  <div class="hero-art" aria-hidden="true"><span>🥑</span><span>🍞</span><span>🥛</span><span>🍅</span></div>
+</aside>
+<main class="auth">
+  <h1>Crie sua conta</h1>
+  <p class="sub">Cadastre-se e ganhe 2% de cashback nas compras.</p>
+  <div th:replace="~{base :: msg}"></div>
+  <form th:action="@{/cadastro}" method="post" class="form">
+      <label>Nome <input name="nome" required autofocus></label>
+      <label>E-mail <input type="email" name="email" required></label>
+      <label>Senha <input type="password" name="senha" minlength="4" required></label>
+      <button>Criar conta</button>
+  </form>
+  <p class="sub">Já tem conta? <a href="/login">Entrar</a></p>
+</main>
+</body>
+</html>
